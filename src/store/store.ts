@@ -1,15 +1,12 @@
 import * as rp from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { persistStore, persistReducer } from 'redux-persist'
+
+import { authReducer } from './auth/authReducer'
 import { sessionService } from 'redux-react-session';
-import { configureStore, ThunkAction, Action, getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit';
-import { createStateSyncMiddleware, initStateWithPrevTab } from 'redux-state-sync';
-
-import { authenticationReducer as authReducer } from './auth/authenticationReducer';
-
-const middlewares = [
-    createStateSyncMiddleware(),
-];
+import { initStateWithPrevTab } from 'redux-state-sync';
+import { postAuthReducer } from './auth/postAuthRecuder';
+import { persistStore, persistReducer } from 'redux-persist'
+import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/toolkit';
 
 const persistConfig = {
     key: 'root',
@@ -18,17 +15,19 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    account: postAuthReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
     reducer: persistedReducer,
-    middleware: [...getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [rp.FLUSH, rp.REHYDRATE, rp.PAUSE, rp.PERSIST, rp.PURGE, rp.REGISTER],
-        },
-      }), ...middlewares],
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [rp.FLUSH, rp.REHYDRATE, rp.PAUSE, rp.PERSIST, rp.PURGE, rp.REGISTER],
+            },
+        }),
 });
 
 

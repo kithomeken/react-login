@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import { withReduxStateSync } from 'redux-state-sync';
 
-import { authenticationReducer } from './auth/authenticationReducer';
+import { authReducer } from './auth/authReducer';
+import { withReduxStateSync } from 'redux-state-sync';
+import { postAuthReducer } from './auth/postAuthRecuder';
 
 const rootReducer = combineReducers({
-    auth: authenticationReducer,
+    auth: authReducer,
+    account: postAuthReducer,
 })
 
 export default withReduxStateSync(rootReducer)
